@@ -1,0 +1,36 @@
+From ba691f48446baf669baeb50398dc9413c03ee79a Mon Sep 17 00:00:00 2001
+From: "jie.he" <jie1.he@intel.com>
+Date: Mon, 8 Apr 2019 16:37:08 +0800
+Subject: [PATCH] fix the compile error occured in gcc 8.3.1, which caused due
+ to an strncpy warning -Wstringop-truncation, from gcc 8.1, it became an
+ error. change strncpy to memcpy to avoid this error
+
+---
+ src/apps/vhost/vhost_user.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/apps/vhost/vhost_user.c b/src/apps/vhost/vhost_user.c
+index 77752f93..9a877d90 100644
+--- a/src/apps/vhost/vhost_user.c
++++ b/src/apps/vhost/vhost_user.c
+@@ -33,7 +33,7 @@ int vhost_user_connect(const char *path)
+     }
+ 
+     un.sun_family = AF_UNIX;
+-    strncpy(un.sun_path, path, sizeof(un.sun_path));
++    memcpy((void *)un.sun_path, (void *)path, sizeof(un.sun_path));
+ 
+     if (connect(sock, (struct sockaddr *) &un, sizeof(un)) == -1) {
+         close(sock);
+@@ -54,7 +54,7 @@ int vhost_user_listen(const char *path)
+     }
+ 
+     un.sun_family = AF_UNIX;
+-    strncpy(un.sun_path, path, sizeof(un.sun_path));
++    memcpy((void *)un.sun_path, (void *)path, sizeof(un.sun_path));
+     unlink(un.sun_path);
+     if (bind(sock, (struct sockaddr *) &un, sizeof(un)) == -1) {
+         close(sock);
+-- 
+2.17.1
+
