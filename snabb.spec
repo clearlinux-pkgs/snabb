@@ -4,7 +4,7 @@
 #
 Name     : snabb
 Version  : 2018.09
-Release  : 1
+Release  : 2
 URL      : https://github.com/snabbco/snabb/archive/v2018.09.tar.gz
 Source0  : https://github.com/snabbco/snabb/archive/v2018.09.tar.gz
 Summary  : Just-in-time compiler for Lua
